@@ -24,7 +24,11 @@ int read_file(char * filename, char ** buffer) {
 
     //allocate correct size for (char *) buffer
     *buffer = (char *) malloc(sizeof(char) + size * sizeof(char));
-    char c;
+    //check for malloc error
+    if (*buffer == NULL) {
+        fprintf(stderr, "ERROR: failed to malloc");
+        exit(12);
+    }
     //make last char the null pointer to signify end of string
     (* buffer)[size] = '\0';
     //loop from the back to the front to reverse file's contents
@@ -54,6 +58,8 @@ int write_file(char * filename, char * buffer, int size) {
     //check for error
     if (outputFile == NULL) {
         fprintf(stderr, "ERROR: could not open output file\n");
+        //free memory
+        free(buffer);
         exit(2);
     }
 
