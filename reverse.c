@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "file_utils.h"
 
 /***********************
@@ -18,13 +19,16 @@ int main(int argc, char ** argv) {
         return 0;
     }
 
-    //create c-string initially null because unkown desired size
+    //create char * initially null because unkown desired size
     char * buffer = (void *) NULL;
 
     read_file(argv[1], &buffer);
 
     write_file(argv[2], buffer, 0);
     
+    //free memory from (char *) buffer
+    free(buffer);
+
     //successfully terminate program
     return 0;
 }

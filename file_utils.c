@@ -3,7 +3,7 @@
 #include <sys/stat.h>
 
 /***********************
-* reads the provided file reverse into a c-string
+* reads the provided file reverse into a char *
 *
 * @returns success of reading the file
 ************************/
@@ -22,13 +22,13 @@ int read_file(char * filename, char ** buffer) {
     stat(filename, &st);
     int size = st.st_size;
 
-    //allocate correct size for c-string
+    //allocate correct size for (char *) buffer
     *buffer = (char *) malloc(sizeof(char) + size * sizeof(char));
     char c;
     //make last char the null pointer to signify end of string
-    (* buffer)[size + 1] = '\0';
+    (* buffer)[size] = '\0';
     //loop from the back to the front to reverse file's contents
-    int index = size;
+    int index = size - 1;
     while (index >= 0) {
         (* buffer)[index] = fgetc(inputFile);
         index--;
@@ -41,7 +41,10 @@ int read_file(char * filename, char ** buffer) {
 }
 
 /***********************
-* writes to the given file the c-string passed in
+* writes to the given file the char * passed in
+*
+* note: size unneeded in my implementation because I
+* added null terminator to the end of the (char *) buffer
 *
 * @returns result of opening the file for write+
 ************************/
@@ -54,7 +57,7 @@ int write_file(char * filename, char * buffer, int size) {
         exit(2);
     }
 
-    //write c-string to file, get result of writing to check for errors
+    //write (char *) buffer to file, get result of writing to check for errors
     int result = fputs(buffer, outputFile);
     if (result < 0) {
         fprintf(stderr, "ERROR: error occurred while writing to file\n");
