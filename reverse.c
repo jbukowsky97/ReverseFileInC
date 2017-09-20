@@ -25,5 +25,6 @@ int main(int argc, char ** argv) {
 
     write_file(argv[2], buffer, 0);
     
+    //successfully terminate program
     return 0;
 }
