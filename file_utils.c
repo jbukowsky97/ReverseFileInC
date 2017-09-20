@@ -2,47 +2,66 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+/***********************
+* reads the provided file reverse into a c-string
+*
+* @returns success of reading the file
+************************/
 int read_file(char * filename, char ** buffer) {
+    //open up inputFile for read
     FILE * inputFile = fopen(filename, "r");
+    //check for error
     if (inputFile == NULL) {
         fprintf(stderr, "ERROR: could not open input file\n");
         exit(2);
     }
 
+    //get size of characters in file
+    //credit -> woodring
     struct stat st;
     stat(filename, &st);
     int size = st.st_size;
 
+    //allocate correct size for c-string
     *buffer = (char *) malloc(sizeof(char) + size * sizeof(char));
     char c;
+    //make last char the null pointer to signify end of string
     (* buffer)[size + 1] = '\0';
+    //loop from the back to the front to reverse file's contents
     int index = size;
     while (index >= 0) {
-        c = fgetc(inputFile);
-        // if (c != EOF) {
-        (* buffer)[index] = c;
-        // }
+        (* buffer)[index] = fgetc(inputFile);
         index--;
     }
 
+    //close file for os
     fclose(inputFile);
 
     return 0;
 }
 
+/***********************
+* writes to the given file the c-string passed in
+*
+* @returns result of opening the file for write+
+************************/
 int write_file(char * filename, char * buffer, int size) {
+    //open up outputFile for write+, to create if file doesn't exist
     FILE * outputFile = fopen(filename, "w+");
+    //check for error
     if (outputFile == NULL) {
         fprintf(stderr, "ERROR: could not open output file\n");
         exit(2);
     }
 
+    //write c-string to file, get result of writing to check for errors
     int result = fputs(buffer, outputFile);
     if (result < 0) {
         fprintf(stderr, "ERROR: error occurred while writing to file\n");
         exit(2);
     }
 
+    //close file for os
     fclose(outputFile);
 
     return 0;
