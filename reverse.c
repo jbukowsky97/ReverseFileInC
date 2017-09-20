@@ -5,7 +5,7 @@
 * main function to manage and run program
 *
 * used https://www.tutorialspoint.com/cprogramming/
-* for all learning done about I/O and pointers
+* for all external learning done about I/O and pointers
 * and c in general
 *
 * @returns result to the system as integer
