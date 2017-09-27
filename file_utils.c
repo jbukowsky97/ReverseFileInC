@@ -23,25 +23,23 @@ int read_file(char * filename, char ** buffer) {
     int size = st.st_size;
 
     //allocate correct size for (char *) buffer
-    *buffer = (char *) malloc(sizeof(char) + size * sizeof(char));
+    *buffer = (char *) malloc(size * sizeof(char));
     //check for malloc error
     if (*buffer == NULL) {
         fprintf(stderr, "ERROR: failed to malloc");
         exit(12);
     }
-    //make last char the null pointer to signify end of string
-    (* buffer)[size] = '\0';
-    //loop from the back to the front to reverse file's contents
-    int index = size - 1;
-    while (index >= 0) {
+    //loop through file's chararacters to read file's contents
+    int index = 0;
+    while (index < size) {
         (* buffer)[index] = fgetc(inputFile);
-        index--;
+        index++;
     }
 
     //close file for os
     fclose(inputFile);
 
-    return 0;
+    return size;
 }
 
 /***********************
@@ -64,10 +62,12 @@ int write_file(char * filename, char * buffer, int size) {
     }
 
     //write (char *) buffer to file, get result of writing to check for errors
-    int result = fputs(buffer, outputFile);
-    if (result < 0) {
-        fprintf(stderr, "ERROR: error occurred while writing to file\n");
-        exit(2);
+    for(int i = 0; i < size; i++) {
+        int result = fputc(buffer[i], outputFile);
+        if (result == EOF) {
+            fprintf(stderr, "ERROR: error occurred while writing to file\n");
+            exit(2);
+        }
     }
 
     //close file for os

@@ -15,16 +15,29 @@ int main(int argc, char ** argv) {
     //check to make sure arguments match desired
     if (argc != 3) {
         //print usage for user
-        printf("usage:\n./reverse INPUT_FILENAME OUTPUT_FILENAME\n");
+        printf("usage:\n\t./reverse INPUT_FILENAME OUTPUT_FILENAME\n");
         return 0;
     }
 
     //create char * initially null because unkown desired size
     char * buffer = (void *) NULL;
 
-    read_file(argv[1], &buffer);
+    //read from file, also storing size of buffer
+    int size = read_file(argv[1], &buffer);
 
-    write_file(argv[2], buffer, 0);
+    //reverse array in log(n) approach
+    int left = 0;
+    int right = size - 1;
+    while(left < right) {
+        char temp = buffer[left];
+        buffer[left] = buffer[right];
+        buffer[right] = temp;
+        left++;
+        right--;
+    }
+
+    //write to file
+    write_file(argv[2], buffer, size);
     
     //free memory from (char *) buffer
     free(buffer);
